@@ -1,0 +1,42 @@
+.chatbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 500px;
+}
+
+.user-message, .doctor-message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.user-message {
+  background-color: #eee;
+  color: #333;
+}
+
+.doctor-message {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+#user-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#send-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
