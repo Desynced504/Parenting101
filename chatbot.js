@@ -1,23 +1,47 @@
+const sendButton = document.getElementById("send-button");
 const userInput = document.getElementById("user-input");
-const sendMessageButton = document.getElementById("send-button");
 
-sendMessageButton.addEventListener("click", function() {
-  const userMessage = userInput.value.trim();
-  if (userMessage) {
-    // Add logic here to process user message (e.g., check keywords, generate response)
-    // Here's a simple example
-    const doctorMessage = "That's an interesting question! Remember, every child is unique and specific situations require professional guidance. " +
-      "However, you could try... (insert general advice related to a common topic)";
-    // Update the chatbox with the new messages
-    const chatbox = document.querySelector(".chatbox");
-    const newMessageUser = document.createElement("div");
-    newMessageUser.classList.add("user-message");
-    newMessageUser.textContent = userMessage;
-    chatbox.appendChild(newMessageUser);
-    const newMessageDoctor = document.createElement("div");
-    newMessageDoctor.classList.add("doctor-message");
-    newMessageDoctor.textContent = doctorMessage;
-    chatbox.appendChild(newMessageDoctor);
-    userInput.value = "";
-  }
+sendButton.addEventListener("click", async function() {
+    const userQuestion = userInput.value.trim();
+
+    if (userQuestion) {
+        try {
+            const response = await fetch('http://localhost:5000/receive-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data: userQuestion }),
+            });
+
+            if (response.ok) {
+                const doctorResponse = await response.json();
+                console.log('Response from backend:', doctorResponse.result);
+
+              // Handling Response from Backend
+                const chatbox = document.querySelector(".chatbox");
+
+                const newMessageUser = document.createElement("div");
+                newMessageUser.classList.add("user-message");
+                newMessageUser.textContent = userQuestion;
+                chatbox.appendChild(newMessageUser);
+
+                const newMessageDoctor = document.createElement("div");
+                newMessageDoctor.classList.add("doctor-message");
+
+                // Replace newline characters (\n) with HTML line break tags (<br>)
+                doctorResponse.result = doctorResponse.result.replace(/\n/g, '<br>');
+
+                newMessageDoctor.innerHTML = doctorResponse.result;
+                chatbox.appendChild(newMessageDoctor);
+
+                userInput.value = "";
+
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error.message);
+        }
+    }
 });
